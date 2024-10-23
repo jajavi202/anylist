@@ -42,7 +42,9 @@ export class ItemsService {
     return this.itemRepository.save( item );
   }
 
-  async remove(id: number) {
-    return `This action removes a #${id} item`;
+  async remove(id: string) {
+    const item = await this.findOneById(id);
+
+    return this.itemRepository.remove(item);
   }
 }

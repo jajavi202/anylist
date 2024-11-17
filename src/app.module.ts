@@ -2,10 +2,19 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
-import { join } from 'path';
-import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
-import { ItemsModule } from './items/items.module';
+import { JwtService } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
+import path, { join } from 'path';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+import { ItemsModule } from './items/items.module';
+import { PubSub } from 'graphql-subscriptions';
+import { SharedModule } from './shared/shared.module';
+import { Context } from 'vm';
+import { isSubscription } from 'rxjs/internal/Subscription';
+
+const pubSub = new PubSub();
 
 @Module({
   imports: [
@@ -15,7 +24,52 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       playground: false,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
+          subscriptions: {
+            'graphql-ws': true
+          },
     }),
+
+    // GraphQLModule.forRootAsync<ApolloDriverConfig>(
+    //   {
+    //     driver: ApolloDriver,
+    //     imports: [AuthModule, ConfigModule],
+    //     inject: [JwtService],
+    //     useFactory: async (JwtService: JwtService) => ({
+    //       subscriptions: {
+    //         'graphql-ws': {
+    //           path: '/graphql',
+    //           onConnect: (connectionParams: any) => {
+    //             console.log('Connected');
+    //             console.log('Connection params:', connectionParams); // Debugging line
+    //             const authToken = connectionParams.connectionParams?.Authorization;
+    //             if (!authToken) { throw new Error('No auth token!'); }
+    //             let payload;
+    //             try {
+    //               payload = JwtService.decode(authToken.replace('Bearer ', ''))
+    //             } catch (e) {
+    //               throw new Error('Invalid token');
+    //             }
+
+    //             return { user: payload };
+    //           },
+    //         }
+    //       },
+    //       playground: false,
+    //       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+    //       plugins: [ApolloServerPluginLandingPageLocalDefault()],
+    //       context: ({ req, connection }) => {
+    //         if (!connection) {
+    //           const token = req.headers.authorization?.replace('Bearer ', '');
+    //           if (!token) throw new Error('No token provided');
+
+    //           const payload = JwtService.decode(token);
+    //           if (!payload) throw new Error('Invalid token');
+    //         }
+    //       },
+    //      })
+    //    }
+    // ),
+
     ItemsModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -27,8 +81,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       synchronize: true,
       autoLoadEntities: true,
     }),
+    UsersModule,
+    AuthModule,
+    SharedModule,
   ],
   controllers: [],
-  providers: [],
 })
-export class AppModule {}
+export class AppModule { }

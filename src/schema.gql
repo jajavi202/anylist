@@ -6,19 +6,49 @@ type Item {
   id: ID!
   name: String!
   quantity: Float!
-  quantityUnits: String!
+  quantityUnits: String
+  user: User!
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  password: String!
+  roles: [ValidRoles!]!
+  isActive: Boolean!
+  updateActionUser: User
+  items: [Item!]
+  itemCount: Int!
+}
+
+enum ValidRoles {
+  ADMIN
+  USER
+}
+
+type AuthResponse {
+  token: String!
+  user: User!
 }
 
 type Query {
   items: [Item!]!
   item(name: String!): Item!
   itemById(id: ID!): Item!
+  users(roles: [ValidRoles!] = []): [User!]!
+  user(id: ID!): User!
+  revalidate: AuthResponse!
 }
 
 type Mutation {
   createItem(createItemInput: CreateItemInput!): Item!
   updateItem(updateItemInput: UpdateItemInput!): Item!
   removeItem(id: ID!): Item!
+  blockUser(id: ID!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  signUp(signUpInput: SignUpInput!): AuthResponse!
+  signIn(signInInput: SignInInput!): AuthResponse!
 }
 
 input CreateItemInput {
@@ -32,4 +62,28 @@ input UpdateItemInput {
   quantity: Float
   quantityUnits: String
   id: ID!
+}
+
+input UpdateUserInput {
+  name: String
+  email: String
+  password: String
+  id: ID!
+  roles: [ValidRoles!]
+  isActive: Boolean
+}
+
+input SignUpInput {
+  email: String!
+  password: String!
+  name: String!
+}
+
+input SignInInput {
+  email: String!
+  password: String!
+}
+
+type Subscription {
+  subTest: User!
 }

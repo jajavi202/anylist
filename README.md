@@ -14,7 +14,7 @@
 npm i
 ```
 
-4. Levantar la imagen.
+4. Levantar la imagen con docker desktop abierto.
 
 ```bash
 docker-compose up -d
@@ -31,3 +31,4 @@ npm run start:dev
 ```curl
 localhost:3000/graphql
 ```
+

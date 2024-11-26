@@ -32,3 +32,4 @@ npm run start:dev
 localhost:3000/graphql
 ```
 
+7. Ejecutar query executeSeed.

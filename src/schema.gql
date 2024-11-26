@@ -2,12 +2,27 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type List {
+  id: ID!
+  name: String!
+  user: User!
+  listItems: [ListItem!]!
+}
+
+type ListItem {
+  id: ID!
+  quantity: Float!
+  completed: Boolean!
+  list: List!
+  item: Item!
+}
+
 type Item {
   id: ID!
   name: String!
-  quantity: Float!
   quantityUnits: String
   user: User!
+  listItems: [ListItem!]!
 }
 
 type User {
@@ -18,7 +33,8 @@ type User {
   roles: [ValidRoles!]!
   isActive: Boolean!
   updateActionUser: User
-  items: [Item!]
+  items(skip: Int! = 0, take: Int! = 10): [Item!]!
+  lists(skip: Int! = 0, take: Int! = 10): [List!]!
   itemCount: Int!
 }
 
@@ -33,11 +49,13 @@ type AuthResponse {
 }
 
 type Query {
-  items: [Item!]!
+  items(skip: Int! = 0, take: Int! = 10): [Item!]!
   item(name: String!): Item!
   itemById(id: ID!): Item!
   users(roles: [ValidRoles!] = []): [User!]!
-  user(id: ID!): User!
+  user: User!
+  lists(skip: Int! = 0, take: Int! = 10): [List!]!
+  list(id: ID!): List!
   revalidate: AuthResponse!
 }
 
@@ -47,8 +65,13 @@ type Mutation {
   removeItem(id: ID!): Item!
   blockUser(id: ID!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
+  createList(createListInput: CreateListInput!): List!
+  updateList(updateListInput: UpdateListInput!): List!
+  removeList(id: ID!): List!
+  createListItem(createListItemInput: CreateListItemInput!): ListItem!
   signUp(signUpInput: SignUpInput!): AuthResponse!
   signIn(signInInput: SignInInput!): AuthResponse!
+  executeSeed: Boolean!
 }
 
 input CreateItemInput {
@@ -71,6 +94,22 @@ input UpdateUserInput {
   id: ID!
   roles: [ValidRoles!]
   isActive: Boolean
+}
+
+input CreateListInput {
+  name: String!
+}
+
+input UpdateListInput {
+  name: String!
+  id: ID!
+}
+
+input CreateListItemInput {
+  quantity: Float = 0
+  completed: Boolean = false
+  listId: ID!
+  itemId: ID!
 }
 
 input SignUpInput {

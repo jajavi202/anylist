@@ -6,16 +6,23 @@ import { User } from './entities/user.entity';
 import { ItemsService } from 'src/items/items.service';
 import { ItemsModule } from 'src/items/items.module';
 import { SharedModule } from 'src/shared/shared.module';
+import { SharedService } from 'src/shared/shared.service';
+import { AppModule } from 'src/app.module';
+import { PubSub } from 'graphql-subscriptions';
+import { ListsModule } from 'src/lists/lists.module';
+
+const pubSub = new PubSub();
 
 @Module({
-  providers: [UsersResolver, UsersService],
-  imports: [
-    TypeOrmModule.forFeature([User]),
-    ItemsModule,
-    SharedModule
+  providers: [
+    UsersResolver,
+    UsersService,
+    {
+      provide: 'PUB_SUB',
+      useValue: pubSub,
+    },
   ],
-  exports: [
-    UsersService
-  ]
+  imports: [TypeOrmModule.forFeature([User]), ItemsModule, ListsModule],
+  exports: [TypeOrmModule, UsersService, 'PUB_SUB'],
 })
 export class UsersModule {}

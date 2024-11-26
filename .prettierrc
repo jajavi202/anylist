@@ -1,4 +1,35 @@
 {
   "singleQuote": true,
-  "trailingComma": "all"
+  "trailingComma": "all",
+  "tabWidth": 2,
+  "semi": true,
+  "bracketSpacing": true,
+  "arrowParens": "always",
+  "printWidth": 80,
+  "useTabs": false,
+  "endOfLine": "lf",
+  "proseWrap": "always",
+  "htmlWhitespaceSensitivity": "css",
+  "jsxSingleQuote": true,
+  "quoteProps": "consistent",
+  "insertPragma": false,
+  "requirePragma": false,
+  "overrides": [
+    {
+      "files": "*.ts",
+      "options": {
+        "parser": "typescript",
+        "singleQuote": true,
+        "semi": true
+      }
+    },
+    {
+      "files": "*.js",
+      "options": {
+        "parser": "babel",
+        "singleQuote": true,
+        "semi": true
+      }
+    }
+  ]
 }

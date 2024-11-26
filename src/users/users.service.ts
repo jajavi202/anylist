@@ -96,7 +96,7 @@ export class UsersService {
       this.handleDBError(err);
     }
   }
-
+  
   //#region Private Methods
 
   private handleDBError(err: any): never {

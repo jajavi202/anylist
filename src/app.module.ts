@@ -13,6 +13,8 @@ import { PubSub } from 'graphql-subscriptions';
 import { SharedModule } from './shared/shared.module';
 import { Context } from 'vm';
 import { isSubscription } from 'rxjs/internal/Subscription';
+import { ListsModule } from './lists/lists.module';
+import { ListItemModule } from './list-item/list-item.module';
 
 const pubSub = new PubSub();
 
@@ -84,6 +86,8 @@ const pubSub = new PubSub();
     UsersModule,
     AuthModule,
     SharedModule,
+    ListsModule,
+    ListItemModule,
   ],
   controllers: [],
 })

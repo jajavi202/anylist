@@ -26,9 +26,10 @@ const pubSub = new PubSub();
       playground: false,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
-          subscriptions: {
-            'graphql-ws': true
-          },
+      subscriptions: {
+        'graphql-ws': true,
+      },
+      introspection: true,
     }),
 
     // GraphQLModule.forRootAsync<ApolloDriverConfig>(
@@ -91,4 +92,4 @@ const pubSub = new PubSub();
   ],
   controllers: [],
 })
-export class AppModule { }
+export class AppModule {}
